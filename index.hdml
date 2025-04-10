@@ -22,13 +22,18 @@
       color: white;
     }
     #page2 {
-      display: none;
-      background: url('your_background_image.jpg') no-repeat center center;
-      background-size: cover;
+      display: flex;
+      background-color: #ffccdd;
       color: black;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-image: url('IMG_8516.png');
+      background-size: cover;
+      background-position: center;
+      position: relative;
     }
     #page3 {
-      display: none;
       background: #ffeef5;
       flex-direction: column;
       justify-content: center;
@@ -49,8 +54,10 @@
       background: #ff3b30;
       color: white;
       position: absolute;
+      transition: top 0.4s ease, left 0.4s ease;
+      max-width: 100px;
     }
-    .lock-input {
+    .keypad {
       display: grid;
       grid-template-columns: repeat(3, 60px);
       gap: 10px;
@@ -58,19 +65,77 @@
       background-color: rgba(255,255,255,0.8);
       padding: 20px;
       border-radius: 15px;
+      z-index: 1;
     }
-    .lock-input button {
+    .keypad button {
       font-size: 1.5em;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #f578b5;
+      color: white;
+      border: none;
+      cursor: pointer;
     }
-    .envelope {
+    .envelope-wrapper {
       position: relative;
       width: 300px;
       height: 200px;
     }
+    .envelope {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: #ffccdd;
+      border-radius: 10px;
+      transition: transform 0.5s;
+    }
+    .envelope.open {
+      transform: translateY(-50px);
+    }
+    .letter {
+      position: absolute;
+      width: 80%;
+      height: 80%;
+      background-color: white;
+      top: 10%;
+      left: 10%;
+      border-radius: 5px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      opacity: 0;
+      transition: opacity 0.5s;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    .envelope.open + .letter {
+      opacity: 1;
+    }
     .hearts {
-      font-size: 2em;
-      color: pink;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .heart {
+      position: absolute;
+      bottom: 0;
+      width: 20px;
+      height: 20px;
+      background-color: red;
+      clip-path: path('M10 30s-10-10-10-15a10 10 0 0 1 20 0c0 5-10 15-10 15z');
       animation: float 4s infinite;
+    }
+    .heart:nth-child(1) {
+      left: 20%;
+      animation-delay: 0s;
+    }
+    .heart:nth-child(2) {
+      left: 50%;
+      animation-delay: 1s;
+    }
+    .heart:nth-child(3) {
+      left: 80%;
+      animation-delay: 2s;
     }
     @keyframes float {
       0% { transform: translateY(0); opacity: 1; }
@@ -89,19 +154,41 @@
 </div>
 
 <div id="page2" class="page">
-  <div>
-    <p>ใส่รหัสเพื่อปลดล็อก</p>
-    <div class="lock-input" id="pinInput">
-      <!-- JS will generate keypad -->
-    </div>
+  <p style="font-size: 1.2em; background-color: rgba(255,255,255,0.8); padding: 10px 20px; border-radius: 10px;">ใส่รหัสเพื่อปลดล็อก</p>
+  <div class="keypad">
+    <button onclick="enterPin(1)">1</button>
+    <button onclick="enterPin(2)">2</button>
+    <button onclick="enterPin(3)">3</button>
+    <button onclick="enterPin(4)">4</button>
+    <button onclick="enterPin(5)">5</button>
+    <button onclick="enterPin(6)">6</button>
+    <button onclick="enterPin(7)">7</button>
+    <button onclick="enterPin(8)">8</button>
+    <button onclick="enterPin(9)">9</button>
+    <button onclick="clearPin()">ลบ</button>
+    <button onclick="enterPin(0)">0</button>
+    <button onclick="checkPin()">ตกลง</button>
   </div>
 </div>
 
 <div id="page3" class="page">
-  <div class="envelope">
-    <div class="hearts">Happy Valentine's Day!</div>
-    <p>ถึงคนพิเศษ, คนที่เข้ามาเป็นส่วนหนึ่งในชีวิต ทำให้ทุกมของฉันมีค่าขึ้นทุกวินาที</p>
-    <p>To: คนพิเศษ</p>
+  <div class="envelope-wrapper">
+    <div class="envelope" id="envelope"></div>
+    <div class="letter">
+      <p>ถึงคนพิเศษ,</p>
+      <p>คุณคือคนที่ทำให้ทุกวันของฉันมีความหมาย ขอบคุณที่อยู่เคียงข้างกัน</p>
+      <p>ไม่ว่าพรุ่งนี้จะเกิดอะไรขึ้น ฉันก็ยังอยากมีคุณอยู่ในทุกๆ วัน</p>
+      <p>ในวันที่เรายิ้ม หัวเราะ หรือแม้กระทั่งร้องไห้ด้วยกัน ทุกช่วงเวลานั้นมีคุณค่า</p>
+      <p>อยากให้คุณรู้ว่า... คุณสำคัญแค่ไหนสำหรับฉัน</p>
+      <p>ด้วยรัก,</p>
+      <p>จากใจ</p>
+      <p style="font-size: 0.8em; margin-top: 10px;">(ปัดขึ้นเพื่อดูต่อ)</p>
+    </div>
+    <div class="hearts">
+      <div class="heart"></div>
+      <div class="heart"></div>
+      <div class="heart"></div>
+    </div>
   </div>
 </div>
 
@@ -117,58 +204,45 @@
     pages[num].style.display = 'flex';
   }
 
-  // ปุ่ม "ไม่" หนี
   const noBtn = document.getElementById('noBtn');
   noBtn.addEventListener('mouseover', () => {
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 50);
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
+    const maxX = window.innerWidth - btnWidth;
+    const maxY = window.innerHeight - btnHeight;
+    let x = Math.random() * maxX;
+    let y = Math.random() * maxY;
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
     noBtn.style.left = `${x}px`;
     noBtn.style.top = `${y}px`;
   });
 
-  // หน้ากดรหัส
   const correctPin = '1103';
   let inputPin = '';
-  const pinInput = document.getElementById('pinInput');
 
-  const renderKeypad = () => {
-    const numbers = [...Array(10).keys()];
-    numbers.forEach(n => {
-      const btn = document.createElement('button');
-      btn.textContent = n;
-      btn.onclick = () => {
-        inputPin += n;
-        if (inputPin.length === 4) {
-          if (inputPin === correctPin) {
-            goToPage(3);
-          } else {
-            alert("รหัสผิดนะ ลองอีกครั้ง");
-            inputPin = '';
-          }
-        }
-      };
-      pinInput.appendChild(btn);
-    });
+  function enterPin(num) {
+    inputPin += num;
+    if (inputPin.length === 4) {
+      checkPin();    
+    }
+  }
 
-    const clear = document.createElement('button');
-    clear.textContent = 'ลบ';
-    clear.onclick = () => inputPin = '';
-    pinInput.appendChild(clear);
+  function clearPin() {
+    inputPin = '';
+  }
 
-    const confirm = document.createElement('button');
-    confirm.textContent = 'ตกลง';
-    confirm.onclick = () => {
-      if (inputPin === correctPin) {
-        goToPage(3);
-      } else {
-        alert("รหัสผิดนะ ลองอีกครั้ง");
-        inputPin = '';
-      }
-    };
-    pinInput.appendChild(confirm);
-  };
-
-  renderKeypad();
+  function checkPin() {
+    if (inputPin === correctPin) {
+      goToPage(3);
+      setTimeout(() => {
+        document.getElementById('envelope').classList.add('open');
+      }, 500);
+    } else {
+      alert('รหัสไม่ถูกต้อง กรุณาลองอีกครั้ง');
+      inputPin = '';
+    }
+  }
 </script>
 
 </body>
